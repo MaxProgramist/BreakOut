@@ -2,7 +2,6 @@ clear
 
 Vector2 = {"x":0, "y":0}
 
-
 FPS = 1/60
 score = 0
 
