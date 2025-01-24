@@ -60,6 +60,13 @@ for x in range(stepBtwBlocksHorizontal, 960- stepBtwBlocksHorizontal, stepBtwBlo
 end for
 
 
+showScore = function
+	text.row = 25
+	text.color = "#FFFFFF"
+	print "Score:"+score
+end function
+
+
 paddleSpeed = 9
 paddleRotation = 2
 paddleScale = 2
@@ -75,7 +82,8 @@ paddle.localBounds.height = paddleImg.height
 ballDirection = new Vector2
 ballDirection.x = 1 - round(rnd())*2
 ballDirection.y = 1 - round(rnd())*2
-ballSpeed = 5
+ballNomalSpeed = 5
+ballSpeed = ballNomalSpeed
 ballScale = 2
 
 ball.x = 480
@@ -85,15 +93,16 @@ ball.localBounds = new Bounds
 ball.localBounds.width = ballImg.width
 ball.localBounds.height = ballImg.height
 
+showScore
+
 while true
-	textDisplay.clear
-	textDisplay.row = 25
+	horizontalAxis = key.axis("Horizontal")
 	
-	if (paddle.x-paddleImg.width > 0 and key.axis("Horizontal")<0) or (paddle.x+paddleImg.width < 960 and key.axis("Horizontal")>0) then
-		paddle.x += key.axis("Horizontal") * paddleSpeed
+	if (paddle.x-paddleImg.width > 0 and horizontalAxis<0) or (paddle.x+paddleImg.width < 960 and horizontalAxis > 0) then
+		paddle.x += horizontalAxis * paddleSpeed
 		
-		if (paddle.rotation > -2 and key.axis("Horizontal") > 0) or (paddle.rotation < 2 and key.axis("Horizontal") < 0) then
-			paddle.rotation += -paddleRotation*key.axis("Horizontal")
+		if (paddle.rotation > -2 and horizontalAxis > 0) or (paddle.rotation < 2 and horizontalAxis < 0) then
+			paddle.rotation += -paddleRotation*horizontalAxis
 		end if
 	else
 		paddle.rotation = 0
@@ -101,35 +110,39 @@ while true
 	
 	if ball.y > 640 then
 		ballDirection.y *= -1
-	end if
-	
-	if paddle.overlaps(ball) and ball.y > paddle.y+paddleImg.height/2 then
-		ballDirection.y *= -1
+		ballSpeed = ballNomalSpeed
 	end if
 	
 	if (ball.y > 200) then
 		for curentBox in blocks
-			if sqrt((curentBox.x-ball.x)^2 + (curentBox.y-ball.y)^2)<10 then
-				continue
-			end if
 			if ball.overlaps(curentBox) then
-				score += 1
+				ballSpeed = ballNomalSpeed
 				
-				if (ball.y >= curentBox.y-curentBox.image.height or ball.y < curentBox.y+curentBox.image.height) and ball.x < curentBox.x+curentBox.image.width and ball.x > curentBox.x-curentBox.image.width then
+				score += 1
+				text.clear
+				showScore
+				
+				if (ball.y >= curentBox.y-curentBox.image.height*blocksScale/2 or ball.y <= curentBox.y+curentBox.image.height*blocksScale/2) and ball.x <= curentBox.x+curentBox.image.width*blocksScale/2 and ball.x >= curentBox.x-curentBox.image.width*blocksScale/2 then
 					ballDirection.y *= -1
 				end if
-				if (ball.x >= curentBox.y-curentBox.image.width or ball.x < curentBox.x+curentBox.image.width) and ball.y < curentBox.y+curentBox.image.height and ball.y > curentBox.y-curentBox.image.height then
+				if (ball.x >= curentBox.x-curentBox.image.width*blocksScale/2 or ball.x <= curentBox.x+curentBox.image.width*blocksScale/2) and ball.y <= curentBox.y+curentBox.image.height*blocksScale/2 and ball.y >= curentBox.y-curentBox.image.height*blocksScale/2 then
 					ballDirection.x *= -1
 				end if
 				
 				spritesOnDisplay.remove spritesOnDisplay.indexOf(curentBox)
+				blocks.remove blocks.indexOf(curentBox)
+				break
 				
 			end if
 		end for
 	end if
 	
-	if ball.x > 960 or ball.x < 0 or (paddle.overlaps(ball) and (paddle.x > ball.x or paddle.x < ball.x) and ball.y < paddle.y+paddleImg.height/2) then
+	if ball.x > 960 or ball.x < 0 then
 		ballDirection.x *= -1
+	end if
+	
+	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 >= ball.x or paddle.x+paddle.image.width*paddleScale/2 <= ball.x) and ball.y <= paddle.y+paddle.image.height*paddleScale/2 or (ball.y > paddle.y+paddleImg.height/2)) then
+		ballDirection.y *= -1
 	end if
 	
 	ball.x += ballDirection.x * ballSpeed
@@ -138,11 +151,9 @@ while true
 	if ball.y < paddle.y-paddleImg.height-10 then
 		ballSpeed = 0
 		clear
+		showScore
 		print "Game Over"
 	end if
-	
-	textDisplay.color = "#FFFFFF"
-	print "Score:"+score
 	
 	yield
 end while
