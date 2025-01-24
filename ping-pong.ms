@@ -1,10 +1,6 @@
 clear
 
-Vector2 = {"x":0, "y":0}
-
-FPS = 1/60
 score = 0
-
 
 spriteLayerIndex = 4
 textLayerIndex = 3
@@ -12,11 +8,45 @@ display(spriteLayerIndex).mode = displayMode.sprite
 display(spriteLayerIndex).clear
 spritesOnDisplay = display(spriteLayerIndex).sprites
 
-
 paddleImg = file.loadImage("/usr/Textures/Paddle.png")
 ballImg = file.loadImage("/usr/Textures/Ball.png")
 BGImg = file.loadImage("/usr/Textures/BG.png")
 BlocksImg = []
+
+
+
+Vector2 = {"x":0, "y":0}
+
+PrticleSystem = {"position":Vector2_Zero, "count":0, "size":0, "speed":0, "particles":[], "directions":[]}
+PrticleSystem.update = function()
+	for curentIndex in range(1,self.particles.len)
+		self.particles[curentIndex].x += self.directions[curentIndex].x * self.speed
+		self.particles[curentIndex].y += self.directions[curentIndex].y * self.speed
+	end for
+end function
+
+PrticleSystem.newParticleSystem = function()
+	for i in range(1,self.count)
+		newParticle = new Sprite
+		newParticleImg = BlocksImg[rnd()*BlocksImg.len]
+		newParticle.image = newParticleImg
+		newParticle.scale = self.size
+		newParticle.x = 0
+		newParticle.y = 0
+		
+		newParticleDirection = new Vector2
+		newParticleDirection.x = 1 - 2*rnd()
+		newParticleDirection.y = 1 - 2*rnd()
+		
+		spritesOnDisplay.push newParticle
+		self.particles.push newParticle
+		self.directions.push newParticleDirection
+		
+	end for
+end function
+
+
+
 for i in range(1,4)
 	BlocksImg.push file.loadImage("/usr/Textures/Block_"+i+".png")
 end for
@@ -71,7 +101,7 @@ paddleRotation = 2
 paddleScale = 2
 
 paddle.x = 480
-paddle.y = 160
+paddle.y = 90
 paddle.scale = paddleScale
 paddle.localBounds = new Bounds
 paddle.localBounds.width = paddleImg.width
@@ -117,9 +147,17 @@ while true
 			if ball.overlaps(curentBox) then
 				ballSpeed = ballNomalSpeed
 				
+				newBlockParticleSystem = new PrticleSystem
+				newBlockParticleSystem.count = 4
+				newBlockParticleSystem.size = 0.2
+				newBlockParticleSystem.speed = 1
+				newBlockParticleSystem.update
+				
 				score += 1
 				text.clear
 				showScore
+				
+				print newBlockParticleSystem
 				
 				if (ball.y >= curentBox.y-curentBox.image.height*blocksScale/2 or ball.y <= curentBox.y+curentBox.image.height*blocksScale/2) and ball.x <= curentBox.x+curentBox.image.width*blocksScale/2 and ball.x >= curentBox.x-curentBox.image.width*blocksScale/2 then
 					ballDirection.y *= -1
