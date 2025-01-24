@@ -115,10 +115,10 @@ while true
 			if ball.overlaps(curentBox) then
 				score += 1
 				
-				if ball.y > curentBox.y+curentBox.image.height or ball.y < curentBox.y-curentBox.image.height then
+				if (ball.y >= curentBox.y-curentBox.image.height or ball.y < curentBox.y+curentBox.image.height) and ball.x < curentBox.x+curentBox.image.width and ball.x > curentBox.x-curentBox.image.width then
 					ballDirection.y *= -1
 				end if
-				if  ball.x > curentBox.x+curentBox.image.width or ball.x < curentBox.x-curentBox.image.width then
+				if (ball.x >= curentBox.y-curentBox.image.width or ball.x < curentBox.x+curentBox.image.width) and ball.y < curentBox.y+curentBox.image.height and ball.y > curentBox.y-curentBox.image.height then
 					ballDirection.x *= -1
 				end if
 				
