@@ -19,14 +19,14 @@ Vector2 = {"x":0, "y":0}
 
 PrticleSystem = {"position":Vector2_Zero, "count":0, "size":0, "speed":0, "particles":[], "directions":[]}
 PrticleSystem.update = function()
-	for curentIndex in range(1,self.particles.len)
+	for curentIndex in range(0,self.particles.len-1)
 		self.particles[curentIndex].x += self.directions[curentIndex].x * self.speed
 		self.particles[curentIndex].y += self.directions[curentIndex].y * self.speed
 	end for
 end function
 
 PrticleSystem.newParticleSystem = function()
-	for i in range(1,self.count)
+	for i in range(0,self.count)
 		newParticle = new Sprite
 		newParticleImg = BlocksImg[rnd()*BlocksImg.len]
 		newParticle.image = newParticleImg
@@ -151,13 +151,12 @@ while true
 				newBlockParticleSystem.count = 4
 				newBlockParticleSystem.size = 0.2
 				newBlockParticleSystem.speed = 1
+				newBlockParticleSystem.newParticleSystem
 				newBlockParticleSystem.update
 				
 				score += 1
 				text.clear
 				showScore
-				
-				print newBlockParticleSystem
 				
 				if (ball.y >= curentBox.y-curentBox.image.height*blocksScale/2 or ball.y <= curentBox.y+curentBox.image.height*blocksScale/2) and ball.x <= curentBox.x+curentBox.image.width*blocksScale/2 and ball.x >= curentBox.x-curentBox.image.width*blocksScale/2 then
 					ballDirection.y *= -1
