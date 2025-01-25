@@ -176,6 +176,8 @@ while true
 				newBlockParticleSystem.size = 0.7
 				newBlockParticleSystem.speed = 1
 				newBlockParticleSystem.lifetime = 100
+				newBlockParticleSystem.particles = []
+				newBlockParticleSystem.directions = []
 				newBlockParticleSystem.position = newBlockParticleSystemPos
 				
 				newBlockParticleSystem.newParticleSystem
