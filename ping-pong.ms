@@ -42,19 +42,19 @@ PrticleSystem.delete = function()
 end function
 
 PrticleSystem.newParticleSystem = function()
-	self.newParticleImg = particleImg
+	newParticleImg = particleImg
 	
-	for x in range(0,self.newParticleImg.width)
-		for y in range(0,self.newParticleImg.height)
-			if self.newParticleImg.pixel(x,y) == "#FBF9F8FF" then
-				self.newParticleImg.setPixel x,y, self.color
+	for x in range(0,newParticleImg.width)
+		for y in range(0,newParticleImg.height)
+			if newParticleImg.pixel(x,y) == "#FBF9F8FF" then
+				newParticleImg.setPixel x,y, self.color
 			end if
 		end for
 	end for
 	
 	for i in range(0,self.count)
 		self.newParticle = new Sprite
-		self.newParticle.image = self.newParticleImg
+		self.newParticle.image = newParticleImg
 		
 		self.newParticle.scale = self.size[0] + rnd()*(self.size[1]-self.size[0])
 		self.newParticle.x = self.position.x
@@ -187,7 +187,7 @@ while true
 				newBlockParticleSystem.count = 7
 				newBlockParticleSystem.size = [0.6,1.5]
 				newBlockParticleSystem.speed = 1.4
-				newBlockParticleSystem.lifetime = 1200
+				newBlockParticleSystem.lifetime = 200
 				newBlockParticleSystem.color = curentBox.image.pixel(1,4)
 				newBlockParticleSystem.particles = []
 				newBlockParticleSystem.directions = []
@@ -222,6 +222,7 @@ while true
 	
 	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 <= ball.x+ball.image.width*ballScale/2 or paddle.x+paddle.image.width*paddleScale/2 >= ball.x-ball.image.width*ballScale/2) and ball.y-ball.image.height*ballScale/2 >= paddle.y+paddle.image.height*paddleScale/2) then
 		ballDirection.y *= -1
+		ball.y = paddle.y+paddle.image.height + ball.image.height
 		
 		newBlockParticleSystem = new PrticleSystem
 		newBlockParticleSystemPos = new Vector2
