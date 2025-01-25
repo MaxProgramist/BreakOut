@@ -19,13 +19,13 @@ BlocksImg = []
 Vector2 = {"x":0, "y":0}
 Vector2_Zero = new Vector2
 
-PrticleSystem = {"position":Vector2_Zero, "count":0, "size":[0,0], "speed":0, "lifetime":0, "color":"#FFFFFF", "particles":[], "directions":[]}
+PrticleSystem = {"position":Vector2_Zero, "count":0, "size":[0,0], "speed":0, "lifetime":0, "color":"", "particles":[], "directions":[]}
 PrticleSystem.update = function()
 	for curentIndex in range(0,self.particles.len-1)
 		self.particles[curentIndex].x += self.directions[curentIndex].x * self.speed
 		self.particles[curentIndex].y += self.directions[curentIndex].y * self.speed
 		self.lifetime -= 1
-		self.particles[curentIndex].scale -= self.size[1]/self.lifetime
+		self.particles[curentIndex].scale -= self.particles[curentIndex].scale/self.lifetime
 	end for
 end function
 
@@ -42,9 +42,18 @@ PrticleSystem.delete = function()
 end function
 
 PrticleSystem.newParticleSystem = function()
+	self.newParticleImg = particleImg
+	
+	for x in range(0,self.newParticleImg.width)
+		for y in range(0,self.newParticleImg.height)
+			if self.newParticleImg.pixel(x,y) == "#FBF9F8FF" then
+				self.newParticleImg.setPixel x,y, self.color
+			end if
+		end for
+	end for
+	
 	for i in range(0,self.count)
 		self.newParticle = new Sprite
-		self.newParticleImg = particleImg
 		self.newParticle.image = self.newParticleImg
 		
 		self.newParticle.scale = self.size[0] + rnd()*(self.size[1]-self.size[0])
@@ -178,8 +187,8 @@ while true
 				newBlockParticleSystem.count = 7
 				newBlockParticleSystem.size = [0.6,1.5]
 				newBlockParticleSystem.speed = 1.4
-				newBlockParticleSystem.lifetime = 160
-				newBlockParticleSystem.color = "#111111"
+				newBlockParticleSystem.lifetime = 1200
+				newBlockParticleSystem.color = curentBox.image.pixel(1,4)
 				newBlockParticleSystem.particles = []
 				newBlockParticleSystem.directions = []
 				newBlockParticleSystem.position = newBlockParticleSystemPos
@@ -222,7 +231,7 @@ while true
 		newBlockParticleSystem.size = [0.2,0.6]
 		newBlockParticleSystem.speed = 0.8
 		newBlockParticleSystem.lifetime = 160
-		newBlockParticleSystem.color = "#111111"
+		newBlockParticleSystem.color = "#FFFFFFFF"
 		newBlockParticleSystem.particles = []
 		newBlockParticleSystem.directions = []
 		newBlockParticleSystem.position = newBlockParticleSystemPos
@@ -242,7 +251,7 @@ while true
 		newBlockParticleSystem.size = [0.2,0.6]
 		newBlockParticleSystem.speed = 1.4
 		newBlockParticleSystem.lifetime = 160
-		newBlockParticleSystem.color = "#111111"
+		newBlockParticleSystem.color = "#FFFFFFFF"
 		newBlockParticleSystem.particles = []
 		newBlockParticleSystem.directions = []
 		newBlockParticleSystem.position = newBlockParticleSystemPos
