@@ -46,6 +46,7 @@ PrticleSystem.newParticleSystem = function()
 		self.newParticle = new Sprite
 		self.newParticleImg = particleImg
 		self.newParticle.image = self.newParticleImg
+		
 		self.newParticle.scale = self.size[0] + rnd()*(self.size[1]-self.size[0])
 		self.newParticle.x = self.position.x
 		self.newParticle.y = self.position.y
