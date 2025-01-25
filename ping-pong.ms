@@ -34,7 +34,6 @@ end function
 PrticleSystem.delete = function()
 	for curentParticle in self.particles
 		spritesOnDisplay.remove spritesOnDisplay.indexOf(curentParticle)
-		self.particles.remove self.particles.indexOf(curentParticle)
 	end for
 	self.particles = []
 	self.directions = []
@@ -148,6 +147,7 @@ while true
 		if curentSystem.getLifeTime <= 0 then
 			curentSystem.delete
 			allPrticleSystems.remove allPrticleSystems.indexOf(curentSystem)
+			break
 		end if
 	end for
 	
@@ -175,7 +175,7 @@ while true
 				newBlockParticleSystem.count = 4
 				newBlockParticleSystem.size = 0.7
 				newBlockParticleSystem.speed = 1
-				newBlockParticleSystem.lifetime = 2000
+				newBlockParticleSystem.lifetime = 100
 				newBlockParticleSystem.position = newBlockParticleSystemPos
 				
 				newBlockParticleSystem.newParticleSystem
