@@ -42,19 +42,10 @@ PrticleSystem.delete = function()
 end function
 
 PrticleSystem.newParticleSystem = function()
-	newParticleImg = particleImg
-	
-	for x in range(0,newParticleImg.width)
-		for y in range(0,newParticleImg.height)
-			if newParticleImg.pixel(x,y) == "#FBF9F8FF" then
-				newParticleImg.setPixel x,y, self.color
-			end if
-		end for
-	end for
-	
 	for i in range(0,self.count)
 		self.newParticle = new Sprite
-		self.newParticle.image = newParticleImg
+		self.newParticle.image = particleImg
+		self.newParticle.tint = self.color
 		
 		self.newParticle.scale = self.size[0] + rnd()*(self.size[1]-self.size[0])
 		self.newParticle.x = self.position.x
