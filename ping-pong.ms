@@ -265,7 +265,7 @@ while true
 	ball.x += ballDirection.x * ballSpeed
 	ball.y += ballDirection.y * ballSpeed
 	
-	if ball.y < paddle.y-paddleImg.height-10 then
+	if ball.y <= 0 then
 		ballSpeed = 0
 		clear
 		showScore
