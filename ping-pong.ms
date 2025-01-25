@@ -222,7 +222,6 @@ while true
 	
 	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 <= ball.x+ball.image.width*ballScale/2 or paddle.x+paddle.image.width*paddleScale/2 >= ball.x-ball.image.width*ballScale/2) and ball.y-ball.image.height*ballScale/2 >= paddle.y+paddle.image.height*paddleScale/2) then
 		ballDirection.y *= -1
-		ball.y = paddle.y+paddle.image.height + ball.image.height
 		
 		newBlockParticleSystem = new PrticleSystem
 		newBlockParticleSystemPos = new Vector2
