@@ -17,11 +17,23 @@ BlocksImg = []
 
 Vector2 = {"x":0, "y":0}
 
-PrticleSystem = {"position":Vector2_Zero, "count":0, "size":0, "speed":0, "particles":[], "directions":[]}
+PrticleSystem = {"position":Vector2_Zero, "count":0, "size":0, "speed":0, "lifetime":0, "particles":[], "directions":[]}
 PrticleSystem.update = function()
 	for curentIndex in range(0,self.particles.len-1)
 		self.particles[curentIndex].x += self.directions[curentIndex].x * self.speed
 		self.particles[curentIndex].y += self.directions[curentIndex].y * self.speed
+		self.lifetime -= 1
+	end for
+end function
+
+PrticleSystem.getLifeTime = function()
+	return self.lifetime
+end function
+
+PrticleSystem.delete = function()
+	for curentParticle in self.particles
+		spritesOnDisplay.remove spritesOnDisplay.indexOf(curentParticle)
+		self.particles.remove self.particles.indexOf(curentParticle)
 	end for
 end function
 
@@ -31,8 +43,8 @@ PrticleSystem.newParticleSystem = function()
 		newParticleImg = BlocksImg[rnd()*BlocksImg.len]
 		newParticle.image = newParticleImg
 		newParticle.scale = self.size
-		newParticle.x = 0
-		newParticle.y = 0
+		newParticle.x = self.position.x
+		newParticle.y = self.position.y
 		
 		newParticleDirection = new Vector2
 		newParticleDirection.x = 1 - 2*rnd()
@@ -122,10 +134,20 @@ ball.localBounds = new Bounds
 ball.localBounds.width = ballImg.width
 ball.localBounds.height = ballImg.height
 
+allPrticleSystems = []
+
 showScore
 
 while true
 	horizontalAxis = key.axis("Horizontal")
+	
+	for curentSystem in allPrticleSystems
+		curentSystem.update
+		if curentSystem.getLifeTime <= 0 then
+			curentSystem.delete
+			allPrticleSystems.remove allPrticleSystems.indexOf(curentSystem)
+		end if
+	end for
 	
 	if (paddle.x-paddleImg.width > 0 and horizontalAxis<0) or (paddle.x+paddleImg.width < 960 and horizontalAxis > 0) then
 		paddle.x += horizontalAxis * paddleSpeed
@@ -148,11 +170,18 @@ while true
 				ballSpeed = ballNomalSpeed
 				
 				newBlockParticleSystem = new PrticleSystem
+				newBlockParticleSystemPos = new Vector2
+				newBlockParticleSystemPos.x = curentBox.x; newBlockParticleSystemPos.y = curentBox.y
+				
 				newBlockParticleSystem.count = 4
-				newBlockParticleSystem.size = 0.2
+				newBlockParticleSystem.size = 0.7
 				newBlockParticleSystem.speed = 1
+				newBlockParticleSystem.lifetime = 2000
+				newBlockParticleSystem.position = newBlockParticleSystemPos
+				
 				newBlockParticleSystem.newParticleSystem
 				newBlockParticleSystem.update
+				allPrticleSystems.push newBlockParticleSystem
 				
 				score += 1
 				text.clear
