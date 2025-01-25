@@ -19,7 +19,7 @@ BlocksImg = []
 Vector2 = {"x":0, "y":0}
 Vector2_Zero = new Vector2
 
-PrticleSystem = {"position":Vector2_Zero, "count":0, "size":[0,0], "speed":0, "lifetime":0, "particles":[], "directions":[]}
+PrticleSystem = {"position":Vector2_Zero, "count":0, "size":[0,0], "speed":0, "lifetime":0, "color":"#FFFFFF", "particles":[], "directions":[]}
 PrticleSystem.update = function()
 	for curentIndex in range(0,self.particles.len-1)
 		self.particles[curentIndex].x += self.directions[curentIndex].x * self.speed
@@ -179,6 +179,7 @@ while true
 				newBlockParticleSystem.size = [0.6,1.5]
 				newBlockParticleSystem.speed = 1.4
 				newBlockParticleSystem.lifetime = 160
+				newBlockParticleSystem.color = "#111111"
 				newBlockParticleSystem.particles = []
 				newBlockParticleSystem.directions = []
 				newBlockParticleSystem.position = newBlockParticleSystemPos
@@ -212,9 +213,43 @@ while true
 	
 	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 <= ball.x+ball.image.width*ballScale/2 or paddle.x+paddle.image.width*paddleScale/2 >= ball.x-ball.image.width*ballScale/2) and ball.y-ball.image.height*ballScale/2 >= paddle.y+paddle.image.height*paddleScale/2) then
 		ballDirection.y *= -1
+		
+		newBlockParticleSystem = new PrticleSystem
+		newBlockParticleSystemPos = new Vector2
+		newBlockParticleSystemPos.x = ball.x; newBlockParticleSystemPos.y = ball.y
+		
+		newBlockParticleSystem.count = 7
+		newBlockParticleSystem.size = [0.2,0.6]
+		newBlockParticleSystem.speed = 0.8
+		newBlockParticleSystem.lifetime = 160
+		newBlockParticleSystem.color = "#111111"
+		newBlockParticleSystem.particles = []
+		newBlockParticleSystem.directions = []
+		newBlockParticleSystem.position = newBlockParticleSystemPos
+		
+		newBlockParticleSystem.newParticleSystem
+		newBlockParticleSystem.update
+		allPrticleSystems.push newBlockParticleSystem
 	end if
 	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 <= ball.x+ball.image.width*ballScale/2 or paddle.x+paddle.image.width*paddleScale/2 >= ball.x-ball.image.width*ballScale/2) and ball.y-ball.image.height*ballScale/2 < paddle.y+paddle.image.height*paddleScale/2) then
-		ballDirection.y *= -1
+		ballDirection.x *= -1
+		
+		newBlockParticleSystem = new PrticleSystem
+		newBlockParticleSystemPos = new Vector2
+		newBlockParticleSystemPos.x = curentBox.x; newBlockParticleSystemPos.y = curentBox.y
+		
+		newBlockParticleSystem.count = 7
+		newBlockParticleSystem.size = [0.2,0.6]
+		newBlockParticleSystem.speed = 1.4
+		newBlockParticleSystem.lifetime = 160
+		newBlockParticleSystem.color = "#111111"
+		newBlockParticleSystem.particles = []
+		newBlockParticleSystem.directions = []
+		newBlockParticleSystem.position = newBlockParticleSystemPos
+		
+		newBlockParticleSystem.newParticleSystem
+		newBlockParticleSystem.update
+		allPrticleSystems.push newBlockParticleSystem
 	end if
 	
 	ball.x += ballDirection.x * ballSpeed
