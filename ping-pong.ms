@@ -175,9 +175,9 @@ while true
 				newBlockParticleSystemPos.x = curentBox.x; newBlockParticleSystemPos.y = curentBox.y
 				
 				newBlockParticleSystem.count = 7
-				newBlockParticleSystem.size = [0.5,1.4]
-				newBlockParticleSystem.speed = 1.2
-				newBlockParticleSystem.lifetime = 140
+				newBlockParticleSystem.size = [0.6,1.5]
+				newBlockParticleSystem.speed = 1.4
+				newBlockParticleSystem.lifetime = 160
 				newBlockParticleSystem.particles = []
 				newBlockParticleSystem.directions = []
 				newBlockParticleSystem.position = newBlockParticleSystemPos
