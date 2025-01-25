@@ -11,6 +11,7 @@ spritesOnDisplay = display(spriteLayerIndex).sprites
 paddleImg = file.loadImage("/usr/Textures/Paddle.png")
 ballImg = file.loadImage("/usr/Textures/Ball.png")
 BGImg = file.loadImage("/usr/Textures/BG.png")
+particleImg = file.loadImage("/usr/Textures/Particle.png")
 BlocksImg = []
 
 
@@ -18,12 +19,13 @@ BlocksImg = []
 Vector2 = {"x":0, "y":0}
 Vector2_Zero = new Vector2
 
-PrticleSystem = {"position":Vector2_Zero, "count":0, "size":0, "speed":0, "lifetime":0, "particles":[], "directions":[]}
+PrticleSystem = {"position":Vector2_Zero, "count":0, "size":[0,0], "speed":0, "lifetime":0, "particles":[], "directions":[]}
 PrticleSystem.update = function()
 	for curentIndex in range(0,self.particles.len-1)
 		self.particles[curentIndex].x += self.directions[curentIndex].x * self.speed
 		self.particles[curentIndex].y += self.directions[curentIndex].y * self.speed
 		self.lifetime -= 1
+		self.particles[curentIndex].scale -= self.size[1]/self.lifetime
 	end for
 end function
 
@@ -42,9 +44,9 @@ end function
 PrticleSystem.newParticleSystem = function()
 	for i in range(0,self.count)
 		self.newParticle = new Sprite
-		self.newParticleImg = BlocksImg[rnd()*BlocksImg.len]
+		self.newParticleImg = particleImg
 		self.newParticle.image = self.newParticleImg
-		self.newParticle.scale = self.size
+		self.newParticle.scale = self.size[0] + rnd()*(self.size[1]-self.size[0])
 		self.newParticle.x = self.position.x
 		self.newParticle.y = self.position.y
 		
@@ -172,10 +174,10 @@ while true
 				newBlockParticleSystemPos = new Vector2
 				newBlockParticleSystemPos.x = curentBox.x; newBlockParticleSystemPos.y = curentBox.y
 				
-				newBlockParticleSystem.count = 4
-				newBlockParticleSystem.size = 0.7
-				newBlockParticleSystem.speed = 1
-				newBlockParticleSystem.lifetime = 100
+				newBlockParticleSystem.count = 7
+				newBlockParticleSystem.size = [0.5,1.4]
+				newBlockParticleSystem.speed = 1.2
+				newBlockParticleSystem.lifetime = 140
 				newBlockParticleSystem.particles = []
 				newBlockParticleSystem.directions = []
 				newBlockParticleSystem.position = newBlockParticleSystemPos
@@ -207,7 +209,10 @@ while true
 		ballDirection.x *= -1
 	end if
 	
-	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 >= ball.x or paddle.x+paddle.image.width*paddleScale/2 <= ball.x) and ball.y <= paddle.y+paddle.image.height*paddleScale/2 or (ball.y > paddle.y+paddleImg.height/2)) then
+	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 <= ball.x+ball.image.width*ballScale/2 or paddle.x+paddle.image.width*paddleScale/2 >= ball.x-ball.image.width*ballScale/2) and ball.y-ball.image.height*ballScale/2 >= paddle.y+paddle.image.height*paddleScale/2) then
+		ballDirection.y *= -1
+	end if
+	if paddle.overlaps(ball) and ((paddle.x-paddle.image.width*paddleScale/2 <= ball.x+ball.image.width*ballScale/2 or paddle.x+paddle.image.width*paddleScale/2 >= ball.x-ball.image.width*ballScale/2) and ball.y-ball.image.height*ballScale/2 < paddle.y+paddle.image.height*paddleScale/2) then
 		ballDirection.y *= -1
 	end if
 	
