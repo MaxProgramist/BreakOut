@@ -16,6 +16,7 @@ BlocksImg = []
 
 
 Vector2 = {"x":0, "y":0}
+Vector2_Zero = new Vector2
 
 PrticleSystem = {"position":Vector2_Zero, "count":0, "size":0, "speed":0, "lifetime":0, "particles":[], "directions":[]}
 PrticleSystem.update = function()
@@ -35,24 +36,26 @@ PrticleSystem.delete = function()
 		spritesOnDisplay.remove spritesOnDisplay.indexOf(curentParticle)
 		self.particles.remove self.particles.indexOf(curentParticle)
 	end for
+	self.particles = []
+	self.directions = []
 end function
 
 PrticleSystem.newParticleSystem = function()
 	for i in range(0,self.count)
-		newParticle = new Sprite
-		newParticleImg = BlocksImg[rnd()*BlocksImg.len]
-		newParticle.image = newParticleImg
-		newParticle.scale = self.size
-		newParticle.x = self.position.x
-		newParticle.y = self.position.y
+		self.newParticle = new Sprite
+		self.newParticleImg = BlocksImg[rnd()*BlocksImg.len]
+		self.newParticle.image = self.newParticleImg
+		self.newParticle.scale = self.size
+		self.newParticle.x = self.position.x
+		self.newParticle.y = self.position.y
 		
-		newParticleDirection = new Vector2
-		newParticleDirection.x = 1 - 2*rnd()
-		newParticleDirection.y = 1 - 2*rnd()
+		self.newParticleDirection = new Vector2
+		self.newParticleDirection.x = 1 - 2*rnd()
+		self.newParticleDirection.y = 1 - 2*rnd()
 		
-		spritesOnDisplay.push newParticle
-		self.particles.push newParticle
-		self.directions.push newParticleDirection
+		spritesOnDisplay.push self.newParticle
+		self.particles.push self.newParticle
+		self.directions.push self.newParticleDirection
 		
 	end for
 end function
@@ -108,12 +111,12 @@ showScore = function
 end function
 
 
-paddleSpeed = 9
+paddleSpeed = 5
 paddleRotation = 2
 paddleScale = 2
 
 paddle.x = 480
-paddle.y = 90
+paddle.y = 50
 paddle.scale = paddleScale
 paddle.localBounds = new Bounds
 paddle.localBounds.width = paddleImg.width
@@ -123,12 +126,11 @@ paddle.localBounds.height = paddleImg.height
 ballDirection = new Vector2
 ballDirection.x = 1 - round(rnd())*2
 ballDirection.y = 1 - round(rnd())*2
-ballNomalSpeed = 5
-ballSpeed = ballNomalSpeed
+ballSpeed = 3
 ballScale = 2
 
 ball.x = 480
-ball.y = 220
+ball.y = 260
 ball.scale = ballScale
 ball.localBounds = new Bounds
 ball.localBounds.width = ballImg.width
@@ -161,14 +163,11 @@ while true
 	
 	if ball.y > 640 then
 		ballDirection.y *= -1
-		ballSpeed = ballNomalSpeed
 	end if
 	
 	if (ball.y > 200) then
 		for curentBox in blocks
 			if ball.overlaps(curentBox) then
-				ballSpeed = ballNomalSpeed
-				
 				newBlockParticleSystem = new PrticleSystem
 				newBlockParticleSystemPos = new Vector2
 				newBlockParticleSystemPos.x = curentBox.x; newBlockParticleSystemPos.y = curentBox.y
